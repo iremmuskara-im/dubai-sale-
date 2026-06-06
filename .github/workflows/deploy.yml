@@ -1,0 +1,43 @@
+name: Build & Deploy Dubai Sale Site
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 6 * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'photos/**'
+      - 'scripts/**'
+      - '.github/workflows/**'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Build HTML from Google Sheets
+        env:
+          SHEET_CSV_URL:    ${{ secrets.SHEET_CSV_URL }}
+          WHATSAPP_NUMBER:  ${{ secrets.WHATSAPP_NUMBER }}
+          CONTACT_EMAIL:    ${{ secrets.CONTACT_EMAIL }}
+          SITE_TITLE:       "Dubai Home Sale – Quality Furniture & More"
+        run: python scripts/build.py
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          publish_branch: gh-pages
+          exclude_assets: '.github,scripts,README.md'
