@@ -113,13 +113,16 @@ def render_item_card(item, wa_number, item_id):
       </div>'''
 
 def render_html(items, wa_number, email, title):
+    # Assign global IDs first — must match ITEMS JSON order
+    for idx, item in enumerate(items):
+        item["_id"] = idx
+
     by_cat = {k: [] for k in CATEGORIES}
     for item in items:
         cat = item["category"] if item["category"] in CATEGORIES else "other"
         by_cat[cat].append(item)
 
     sections_html = ""
-    item_id = 0
     for cat_key, (cat_label, _) in CATEGORIES.items():
         cat_items = by_cat[cat_key]
         if not cat_items:
@@ -127,8 +130,7 @@ def render_html(items, wa_number, email, title):
         available = sum(1 for i in cat_items if i["status"] == "available")
         cards = ""
         for i in cat_items:
-            cards += render_item_card(i, wa_number, item_id) + "\n"
-            item_id += 1
+            cards += render_item_card(i, wa_number, i["_id"]) + "\n"
         sections_html += f'''
   <section class="category-section" data-category="{cat_key}">
     <h2 class="category-title">{cat_label}</h2>
@@ -138,12 +140,11 @@ def render_html(items, wa_number, email, title):
     </div>
   </section>'''
 
-    # Build items JSON for JS
+    # Build items JSON for JS — same order as items list (by _id)
     items_json = "[\n"
-    for i, item in enumerate(items):
+    for item in items:
         photos_js = str(item["photos"]).replace("'", '"')
-        price_raw = item["price"].replace(",", "")
-        items_json += f'  {{"id":{i},"name":{repr(item["name"])},"price":"{item["price"]}","photos":{photos_js},"emoji":"{item["emoji"]}","status":"{item["status"]}"}},\n'
+        items_json += f'  {{"id":{item["_id"]},"name":{repr(item["name"])},"price":"{item["price"]}","photos":{photos_js},"emoji":"{item["emoji"]}","status":"{item["status"]}"}},\n'
     items_json += "]"
 
     wa_url_general = f"https://wa.me/{wa_number}?text={urllib.parse.quote('Hi, I am interested in items from your sale')}"
