@@ -8,7 +8,7 @@ import csv
 import urllib.request
 import urllib.parse
 import os
-from datetime import datetim
+from datetime import datetime
 
 SHEET_CSV_URL   = os.environ.get("SHEET_CSV_URL", "")
 WHATSAPP_NUMBER = os.environ.get("WHATSAPP_NUMBER", "971XXXXXXXXX")
