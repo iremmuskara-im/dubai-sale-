@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+
 """
 Dubai Sale — Sheets → HTML Builder
 Features: photo slider, lightbox, cart, WhatsApp/email checkout, PDF save
@@ -40,6 +40,9 @@ def fetch_items():
     reader = csv.DictReader(content.splitlines())
     items = []
     for row in reader:
+        status = row.get("status", "available").strip().lower()
+        if status in ("n/a", "na"):
+            continue
         photos = []
         if row.get("photo_1", "").strip():
             for col in ("photo_1", "photo_2", "photo_3"):
@@ -54,7 +57,7 @@ def fetch_items():
             "description": row.get("description", "").strip(),
             "price":       row.get("price", "").strip(),
             "category":    row.get("category", "other").strip().lower(),
-            "status":      row.get("status", "available").strip().lower(),
+            "status":      status,
             "emoji":       row.get("emoji", "📦").strip(),
             "photos":      photos,
         })
@@ -119,7 +122,7 @@ def render_item_card(item, wa_number, item_id):
         </div>
       </div>'''
 
-def render_html(items, wa_number, email, title):
+def render_html(items, email, title):
     # Assign global IDs first — must match ITEMS JSON order
     for idx, item in enumerate(items):
         item["_id"] = idx
@@ -154,7 +157,6 @@ def render_html(items, wa_number, email, title):
         items_json += f'  {{"id":{item["_id"]},"name":{repr(item["name"])},"price":"{item["price"]}","photos":{photos_js},"emoji":"{item["emoji"]}","status":"{item["status"]}"}},\n'
     items_json += "]"
 
-    wa_url_general = f"https://wa.me/{wa_number}?text={urllib.parse.quote('Hi, I am interested in items from your sale')}"
     updated = datetime.utcnow().strftime("%d %b %Y, %H:%M UTC")
     total = len(items)
     available_total = sum(1 for i in items if i["status"] == "available")
@@ -185,8 +187,7 @@ def render_html(items, wa_number, email, title):
   .header-stats{{font-size:13px;color:var(--taupe);margin-bottom:28px;letter-spacing:1px}}
   .contact-bar{{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}}
   .contact-btn{{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:2px;font-size:13px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;transition:all .25s;cursor:pointer;font-family:'Jost',sans-serif;border:none}}
-  .btn-whatsapp{{background:#25d366;color:white}}
-  .btn-whatsapp:hover{{background:#1ebe5d;transform:translateY(-2px)}}
+  
   .btn-email{{background:transparent;color:var(--cream);border:1px solid rgba(245,240,232,.3)}}
   .btn-email:hover{{border-color:var(--taupe);color:var(--taupe);transform:translateY(-2px)}}
   .notice{{background:var(--sand);text-align:center;padding:14px 20px;font-size:13px;color:var(--dark-brown)}}
@@ -283,6 +284,8 @@ def render_html(items, wa_number, email, title):
   .cart-wa-btn:hover{{background:#1ebe5d}}
   .cart-email-btn{{background:var(--dark-brown);color:var(--cream)}}
   .cart-email-btn:hover{{background:var(--brown)}}
+.cart-pdf-btn{{padding:14px;border-radius:2px;font-family:'Jost',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border:1px solid var(--sand);background:transparent;color:var(--dark-brown);transition:all .2s;text-align:center;display:block;width:100%}}
+.cart-pdf-btn:hover{{background:var(--sand)}}
   footer{{background:var(--dark-brown);color:rgba(245,240,232,.6);text-align:center;padding:32px 20px;font-size:13px}}
   footer strong{{color:var(--taupe)}}
   .updated{{font-size:11px;opacity:.5;margin-top:10px}}
@@ -306,7 +309,6 @@ def render_html(items, wa_number, email, title):
   <p class="header-sub">All items available for viewing in Dubai · Priced to sell fast</p>
   <p class="header-stats">{available_total} of {total} items still available</p>
   <div class="contact-bar">
-    <a href="{wa_url_general}" class="contact-btn btn-whatsapp">💬 WhatsApp</a>
     <a href="mailto:{email}?subject=Dubai Home Sale Inquiry" class="contact-btn btn-email">✉ Email</a>
   </div>
 </header>
@@ -354,8 +356,8 @@ def render_html(items, wa_number, email, title):
   <div class="cart-footer" id="cartFooter" style="display:none">
     <div class="cart-total"><span>Total</span><span id="cartTotal">0 AED</span></div>
     <div class="cart-actions">
-      <a id="cartWaBtn" href="#" class="cart-wa-btn" target="_blank">💬 Send via WhatsApp</a>
       <a id="cartEmailBtn" href="#" class="cart-email-btn">✉ Send via Email</a>
+<button onclick="printList()" class="cart-pdf-btn">🖨 Save as PDF</button>
     </div>
   </div>
 </div>
@@ -492,11 +494,19 @@ function renderCart(){{
     msg+=`• ${{item.name}} – ${{item.price}} AED\\n`;
     emailBody+=`• ${{item.name}} – ${{item.price}} AED\\n`;
   }});
-  msg+=`\\nTotal: ${{total.toLocaleString()}} AED\\n\\nCould you please share the pick-up location? Thank you!`;
-  emailBody+=`\\nTotal: ${{total.toLocaleString()}} AED\\n\\nCould you please share the pick-up location?\\n\\nThank you!`;
   
-  document.getElementById('cartWaBtn').href='https://wa.me/'+WA+'?text='+encodeURIComponent(msg);
   document.getElementById('cartEmailBtn').href='mailto:'+EMAIL_ADDR+'?subject=Dubai Home Sale - Interest List&body='+encodeURIComponent(emailBody);
+}}
+function printList(){{
+  if(cart.length===0) return;
+  var total=0,rows='';
+  cart.forEach(function(item){{
+    var p=parseInt(item.price.replace(/,/g,''))||0; total+=p;
+    rows+='<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eee;font-size:13px"><span>'+item.emoji+' '+item.name+'</span><span>'+item.price+' AED</span></div>';
+  }});
+  var w=window.open('','_blank');
+  w.document.write('<html><head><title>My Interest List</title><style>body{font-family:Georgia,serif;max-width:600px;margin:40px auto;padding:0 20px}h2{color:#4a3728;margin-bottom:16px}.tot{font-weight:700;text-align:right;margin-top:12px}.ft{margin-top:20px;font-size:11px;color:#999}</style></head><body><h2>My Interest List — Dubai Home Sale</h2>'+rows+'<div class="tot">Total: '+total.toLocaleString()+' AED</div><div class="ft">Dubai · Pick-up only · All items sold as-is</div><scr'+'ipt>window.onload=function(){window.print();}<\/scr'+'ipt></body></html>');
+  w.document.close();
 }}
 function removeFromCart(itemId){{
   cart=cart.filter(i=>i.id!==itemId);
@@ -512,7 +522,7 @@ if __name__ == "__main__":
     print("🔨 Building Dubai Sale site...")
     items = fetch_items()
     print(f"   Found {len(items)} items")
-    html = render_html(items, WHATSAPP_NUMBER, EMAIL, SITE_TITLE)
+    html = render_html(items, EMAIL, SITE_TITLE)
     with open("index.html", "w", encoding="utf-8") as f:
         f.write(html)
     print("✅ index.html generated successfully")
