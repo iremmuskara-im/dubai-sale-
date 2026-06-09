@@ -8,7 +8,7 @@ import csv
 import urllib.request
 import urllib.parse
 import os
-from datetime import datetime
+from datetime import datetim
 
 SHEET_CSV_URL   = os.environ.get("SHEET_CSV_URL", "")
 WHATSAPP_NUMBER = os.environ.get("WHATSAPP_NUMBER", "971XXXXXXXXX")
@@ -40,8 +40,15 @@ def fetch_items():
     reader = csv.DictReader(content.splitlines())
     items = []
     for row in reader:
-        photos_raw = row.get("photo", "").strip()
-        photos = [p.strip() for p in photos_raw.split(";") if p.strip()]
+        photos = []
+        if row.get("photo_1", "").strip():
+            for col in ("photo_1", "photo_2", "photo_3"):
+                v = row.get(col, "").strip()
+                if v:
+                    photos.append(v)
+        else:
+            photos_raw = row.get("photo", "").strip()
+            photos = [p.strip() for p in photos_raw.split(";") if p.strip()]
         items.append({
             "name":        row.get("name", "").strip(),
             "description": row.get("description", "").strip(),
