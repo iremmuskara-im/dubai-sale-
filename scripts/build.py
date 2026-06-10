@@ -293,7 +293,6 @@ footer strong{{color:var(--taupe)}}
 <body>
 <header>
   <p class="header-tag">Dubai · Relocating Sale</p>
-  <h1>Everything Must Go<br><em>Quality Home Items</em></h1>
   <p class="header-sub">All items available for viewing in Dubai · Priced to sell fast</p>
   <p class="header-stats">{available_total} of {total} items still available</p>
   <div class="contact-bar">
