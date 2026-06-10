@@ -300,7 +300,7 @@ footer strong{{color:var(--taupe)}}
   </div>
 </header>
 <div class="notice">
-  <strong>Pick-up only</strong> · Dubai location shared upon inquiry · Cash &amp; bank transfer accepted
+  <strong>Pick-up only</strong> · Dubai location shared upon inquiry 
 </div>
 <main>
   <div class="top-bar">
