@@ -138,7 +138,7 @@ footer strong{color:var(--taupe)}
 <header>
   <p class="header-tag">Dubai · Relocating Sale</p>
   <p class="header-sub">All items available for viewing in Dubai · Priced to sell fast</p>
-  <p class="header-stats">25 of 25 items still available</p>
+  <p class="header-stats">22 of 25 items still available</p>
   <div class="contact-bar">
     <a href="mailto:iremmuskara@gmail.com?subject=Dubai Home Sale Inquiry" class="contact-btn btn-email">✉ Email</a>
   </div>
@@ -372,9 +372,9 @@ footer strong{color:var(--taupe)}
 </section>
 <section class="category-section" data-category="kitchen">
   <h2 class="category-title">Kitchen & Dining</h2>
-  <p class="category-count">4 available of 4</p>
+  <p class="category-count">1 available of 4</p>
   <div class="items-grid">
-  <div class="item-card" data-category="kitchen" id="card-20">
+  <div class="item-card sold" data-category="kitchen" id="card-20">
     <div class="slider" id="slider-s20">
 <img class="slide active" src="photos/IMG_7126.jpg" alt="Gas Range with Oven 1" loading="lazy" onclick="openLightbox(20,0)">
 <img class="slide" src="photos/IMG_7212.jpg" alt="Gas Range with Oven 2" loading="lazy" onclick="openLightbox(20,1)">
@@ -386,17 +386,17 @@ footer strong{color:var(--taupe)}
 </div>
 <span class="photo-count">🔍 2 photos</span>
 </div>
-    <span class="status-badge badge-available">Available</span>
+    <span class="status-badge badge-sold">Sold</span>
     <div class="item-body">
       <div class="item-name">Gas Range with Oven</div>
       <div class="item-desc">5-burner freestanding stainless steel gas cooker</div>
       <div class="item-footer">
         <div class="item-price">600 <span>AED</span></div>
-        <button class="add-to-cart-btn" onclick="addToCart(20)">+ Add to List</button>
+        <button class="inquire-btn disabled">Sold</button>
       </div>
     </div>
   </div>
-  <div class="item-card" data-category="kitchen" id="card-21">
+  <div class="item-card sold" data-category="kitchen" id="card-21">
     <div class="slider" id="slider-s21">
 <img class="slide active" src="photos/IMG_7127.jpg" alt="Samsung Dishwasher 1" loading="lazy" onclick="openLightbox(21,0)">
 <img class="slide" src="photos/IMG_7214.jpg" alt="Samsung Dishwasher 2" loading="lazy" onclick="openLightbox(21,1)">
@@ -408,17 +408,17 @@ footer strong{color:var(--taupe)}
 </div>
 <span class="photo-count">🔍 2 photos</span>
 </div>
-    <span class="status-badge badge-available">Available</span>
+    <span class="status-badge badge-sold">Sold</span>
     <div class="item-body">
       <div class="item-name">Samsung Dishwasher</div>
       <div class="item-desc">Freestanding stainless steel full-size dishwasher</div>
       <div class="item-footer">
         <div class="item-price">800 <span>AED</span></div>
-        <button class="add-to-cart-btn" onclick="addToCart(21)">+ Add to List</button>
+        <button class="inquire-btn disabled">Sold</button>
       </div>
     </div>
   </div>
-  <div class="item-card" data-category="kitchen" id="card-22">
+  <div class="item-card sold" data-category="kitchen" id="card-22">
     <div class="slider" id="slider-s22">
 <img class="slide active" src="photos/IMG_7208.jpg" alt="Samsung Refrigerator 1" loading="lazy" onclick="openLightbox(22,0)">
 <img class="slide" src="photos/IMG_7210.jpg" alt="Samsung Refrigerator 2" loading="lazy" onclick="openLightbox(22,1)">
@@ -430,13 +430,13 @@ footer strong{color:var(--taupe)}
 </div>
 <span class="photo-count">🔍 2 photos</span>
 </div>
-    <span class="status-badge badge-available">Available</span>
+    <span class="status-badge badge-sold">Sold</span>
     <div class="item-body">
       <div class="item-name">Samsung Refrigerator</div>
       <div class="item-desc">Top-freezer stainless silver medium-large fridge</div>
       <div class="item-footer">
         <div class="item-price">800 <span>AED</span></div>
-        <button class="add-to-cart-btn" onclick="addToCart(22)">+ Add to List</button>
+        <button class="inquire-btn disabled">Sold</button>
       </div>
     </div>
   </div>
@@ -694,7 +694,7 @@ footer strong{color:var(--taupe)}
 <footer>
   <p>📍 Dubai · <strong>Pick-up only</strong> · All items sold as-is</p>
   <p style="margin-top:8px">Questions? <strong>Email</strong> — responses within a few hours</p>
-  <p class="updated">Last updated: 20 Jun 2026, 12:15 UTC</p>
+  <p class="updated">Last updated: 21 Jun 2026, 12:30 UTC</p>
 </footer>
 
 <script>
@@ -719,9 +719,9 @@ const ITEMS = [
   {"id":17,"name":'Leather Office Chair',"price":"450","photos":["IMG_7221.jpg", "IMG_7222.jpg"],"emoji":"🪑","status":"available"},
   {"id":18,"name":'IKEA Hemnes Daybed',"price":"700","photos":["IMG_7235.jpg"],"emoji":"🛏️","status":"available"},
   {"id":19,"name":'Framed Art Prints Set',"price":"300","photos":["IMG_7236.jpg"],"emoji":"🖼️","status":"available"},
-  {"id":20,"name":'Gas Range with Oven',"price":"600","photos":["IMG_7126.jpg", "IMG_7212.jpg"],"emoji":"🔥","status":"available"},
-  {"id":21,"name":'Samsung Dishwasher',"price":"800","photos":["IMG_7127.jpg", "IMG_7214.jpg"],"emoji":"🍽️","status":"available"},
-  {"id":22,"name":'Samsung Refrigerator',"price":"800","photos":["IMG_7208.jpg", "IMG_7210.jpg"],"emoji":"🧊","status":"available"},
+  {"id":20,"name":'Gas Range with Oven',"price":"600","photos":["IMG_7126.jpg", "IMG_7212.jpg"],"emoji":"🔥","status":"sold"},
+  {"id":21,"name":'Samsung Dishwasher',"price":"800","photos":["IMG_7127.jpg", "IMG_7214.jpg"],"emoji":"🍽️","status":"sold"},
+  {"id":22,"name":'Samsung Refrigerator',"price":"800","photos":["IMG_7208.jpg", "IMG_7210.jpg"],"emoji":"🧊","status":"sold"},
   {"id":23,"name":'IKEA Step Stool',"price":"60","photos":["IMG_7126.jpg"],"emoji":"🪜","status":"available"},
   {"id":24,"name":'NÖSUNDCeiling lamp, birch x2',"price":"300","photos":["IMG_7309.jpg", "IMG_7311.jpg"],"emoji":"","status":"available"},
 ];
